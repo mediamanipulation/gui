@@ -4,8 +4,9 @@ A powerful, local-first Excel transformation toolkit with a modern UI built usin
 
 Matrix Ingestor empowers users to visually manipulate, transform and join Excel data with a polished, intuitive interface.
 
-![Matrix Ingestor Screenshot](docs/screenshot.png)
-
+![Matrix Ingestor Screenshot](docs/scrn01.jpg)
+-
+![Matrix Ingestor Screenshot](docs/scrn02.jpg)
 ---
 
 ## 🚀 Features
