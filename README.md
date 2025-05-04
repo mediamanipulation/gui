@@ -6,9 +6,14 @@ Matrix Ingestor empowers users to visually manipulate, transform and join Excel 
 
 
 
-![Matrix Ingestor Interface Screenshot](./docs/scrn01.jpg)
+<!-- ![Matrix Ingestor Interface Screenshot](./docs/scrn01.jpg)
 
-![Matrix Ingestor Interface Screenshot](./docs/scrn02.jpg)
+Matrix Ingestor Interface Screenshot](./docs/scrn02.jpg) -->
+Matrix Ingestor Interface Screenshot
+<img src="./docs/scrn01.jpg" alt="Matrix Ingestor Interface Screenshot" width="300" />
+<br/>
+Matrix Ingestor Interface Screenshot  file loaded
+<img src="./docs/scrn02.jpg" alt="Matrix Ingestor Interface Screenshot" width="400" />
 
 ## 🚀 Features
 
