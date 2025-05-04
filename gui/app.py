@@ -14,7 +14,7 @@ from gui.core.exporter import export_to_excel
 class ExcelTransformerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Matrix Ingestor")
+        self.root.title("Matrix Exporter")
 
         self.df = None
         self.ref_df = None

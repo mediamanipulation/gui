@@ -12,7 +12,8 @@ try:
 except ImportError:
     # Fallback to basic UI if the enhanced modules aren't available
     USE_ENHANCED_UI = False
-
+    
+print(f"DEBUG: USE_ENHANCED_UI flag is set to: {USE_ENHANCED_UI}")
 # Global constants for styling and spacing
 PAD_X = 8
 PAD_Y = 5
@@ -92,11 +93,11 @@ def create_header(app):
     
     # App title
     if USE_ENHANCED_UI:
-        ttk.Label(header_frame, text="Matrix Ingestor", style="Header.TLabel").pack(side="left")
+        ttk.Label(header_frame, text="Matrix Exporter", style="Header.TLabel").pack(side="left")
     else:
         title_label = ttk.Label(
             header_frame, 
-            text="Matrix Ingestor", 
+            text="Matrix Exporter", 
             font=("Segoe UI", 16, "bold"),
             foreground=PRIMARY_COLOR,
             background=BG_COLOR
@@ -119,7 +120,7 @@ def create_header(app):
 
 def create_main_file_section(app):
     """Create the main file selection section."""
-    file_frame = ttk.LabelFrame(app.root, text="Main Excel File")
+    file_frame = ttk.LabelFrame(app.root, text="Source File")
     file_frame.pack(padx=PAD_X, pady=(0, PAD_Y), fill="x")
     
     # Add container with padding
