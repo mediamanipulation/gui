@@ -2,10 +2,7 @@
 
 A powerful, local-first Excel transformation toolkit with a modern UI built using Python and Tkinter.
 
-Matrix Ingestor empowers users to visually manipulate, transform and join Excel data with a polished, intuitive interface.
-
-
-
+Matrix Ingestor empowers users to visually manipulate, transform and join Excel data with a polished, intuitive interface, prioritizing safety with controlled formula evaluation.
 
 #### Matrix Ingestor Interface Screenshot
 <img src="./docs/scrn01.jpg" alt="Matrix Ingestor Interface Screenshot" width="300" />
@@ -26,7 +23,7 @@ Matrix Ingestor empowers users to visually manipulate, transform and join Excel 
 - Select columns with intuitive checkboxes
 - Apply powerful transformations with the enhanced formula editor
 - Real-time formula validation and previews
-- Support for Python expressions via `pandas.eval()`
+- **Support for Python expressions via `pandas.eval()` with a safer `asteval` fallback** (ensures secure evaluation)
 
 ### ✅ Advanced Reference Data Joining
 - Load and link secondary Excel files
@@ -42,7 +39,7 @@ Matrix Ingestor empowers users to visually manipulate, transform and join Excel 
 
 ### ✅ Enhanced Export Capabilities
 - One-click export to clean Excel files
-- Visual progress tracking
+- Visual progress tracking (where available)
 - Optimized output files
 - Comprehensive error handling
 
@@ -58,32 +55,34 @@ Matrix Ingestor empowers users to visually manipulate, transform and join Excel 
 ## 🖥️ Technical Details
 
 ### Project Structure
-```
 matrix-ingestor/
-├── main.py                # Entry point
+├── main.py             # Entry point
 ├── gui/
-│   ├── app.py             # Main application logic
+│   ├── app.py          # Main application logic & UI coordination
 │   ├── core/
-│   │   ├── exporter.py    # Export functionality
-│   │   ├── formula_engine.py  # Formula processing
-│   │   ├── loader.py      # Excel file loading
-│   │   └── presets.py     # Preset management
+│   │   ├── exporter.py       # Export functionality & formula application logic
+│   │   ├── formula_engine.py # Formula preview logic
+│   │   ├── loader.py         # Excel file loading
+│   │   └── presets.py        # Preset management
 │   └── ui/
-│       ├── layout.py      # UI layout builder
-│       ├── theme.py       # Theming system
-│       ├── utils.py       # UI utilities
-│       ├── custom_widgets.py # Enhanced widgets
-│       └── __init__.py    # Package initialization
-├── assets/                # Application icons/images
-├── presets.json           # Saved transformation presets
-└── config.json            # Application configuration
-```
+│       ├── layout.py         # UI layout builder
+│       ├── theme.py          # Theming system
+│       ├── utils.py          # UI utilities (tooltips, messages, etc.)
+│       ├── custom_widgets.py # Enhanced widgets (FormulaEntry, TooltipButton, etc.)
+│       └── init.py       # Package initialization
+├── assets/             # Optional: Application icons/images
+├── presets.json        # Default location for saved transformation presets
+├── config.json         # Default location for saved application configuration
+├── .gitignore          # Specifies intentionally untracked files
+└── README.md           # This file
+
+*(Note: Add a `LICENSE` file if applicable)*
 
 ### Core Components
-- **Formula Engine**: Leverages pandas' evaluation capabilities with enhanced syntax
-- **Theme System**: Consistent, customizable visual styling
-- **Custom Widgets**: Enhanced UI controls for improved user experience
-- **Export Pipeline**: Optimized transformation and output generation
+- **Formula Engine**: Leverages pandas' efficient `eval()` capabilities, **falling back to the secure `asteval` library for complex or row-wise formulas.**
+- **Theme System**: Consistent, customizable visual styling using `tkinter.ttk`.
+- **Custom Widgets**: Enhanced UI controls (like `TooltipButton`, `ProgressDialog`, and a potential `FormulaEntry`) for improved user experience.
+- **Export Pipeline**: Handles data transformation, joining, and output generation to Excel format.
 
 ---
 
@@ -91,67 +90,72 @@ matrix-ingestor/
 
 ### Prerequisites
 - Python 3.7 or higher
-- Required packages: pandas, openpyxl, tkinter (usually included with Python)
+- Required packages: `pandas`, `openpyxl`, `asteval`
+- `tkinter` (usually included with standard Python distributions)
 
 ### Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/matrix-ingestor.git
-cd matrix-ingestor
-```
+1.  Clone the repository:
+    ```bash
+    # Replace 'yourusername' with the actual GitHub username/organization
+    git clone [https://github.com/yourusername/matrix-ingestor.git](https://github.com/yourusername/matrix-ingestor.git)
+    cd matrix-ingestor
+    ```
 
-2. Install required packages:
-```bash
-pip install pandas openpyxl
-```
+2.  Install required packages:
+    ```bash
+    pip install pandas openpyxl asteval
+    ```
+    *(Consider creating a virtual environment first)*
 
-3. Run the application:
-```bash
-python main.py
-```
+3.  Run the application:
+    ```bash
+    python main.py
+    ```
 
 ---
 
 ## 📝 Usage Guide
 
 ### Working with Excel Files
-1. Click "Load Excel File" to select your main file
-2. Choose the appropriate sheet from the dropdown menu
-3. Set the header row index if needed (default: 0)
-4. The columns will appear in the main panel for configuration
+1.  Click "Load Excel File" to select your main file.
+2.  Choose the appropriate sheet from the dropdown menu.
+3.  Set the header row index if needed (default: 0, meaning the first row is the header).
+4.  The columns will appear in the main panel for configuration.
 
 ### Transforming Data
-- **Include/Exclude Columns**: Toggle checkboxes to select which columns to include
-- **Apply Formulas**: Enter transformations in the formula field
-  - Reference columns using square brackets: `[Column Name]`
-  - Example: `[Price] * 1.15` (applies 15% markup)
-  - Example: `[First Name].upper() + " " + [Last Name].upper()` (combines names in uppercase)
-  - Example: `"Yes" if [Age] > 18 else "No"` (conditional logic)
+-   **Include/Exclude Columns**: Toggle checkboxes next to column names.
+-   **Apply Formulas**: Enter transformations in the formula field next to the column name.
+    -   Reference other columns using their names directly within pandas/asteval compatible expressions: `Price * Quantity` or `[Column Name with Spaces]` (though direct names are usually better if no spaces).
+    -   Example: `Price * 1.15` (applies 15% markup).
+    -   Example: `FirstName.str.upper() + " " + LastName.str.upper()` (combines names in uppercase using pandas string methods - preferred over row-wise).
+    -   Example: `"Yes" if Age > 18 else "No"` (conditional logic, likely evaluated by `asteval` row-wise if `pandas.eval` fails).
+    -   **Note**: Formulas are primarily evaluated using pandas' efficient engine. More complex Python logic or functions not directly supported by pandas may use the `asteval` library for safe, row-by-row evaluation. Check the preview text for hints (`Preview (pandas): ...` or `Preview (asteval): ...`).
 
 ### Working with Reference Data
-1. Click "Load Reference File" to select a secondary Excel file
-2. Enter the column name from your main file in "Main Key"
-3. Enter the column name from your reference file in "Ref Key"
-4. List the columns to include from the reference file in "Ref Columns" (comma-separated)
+1.  Click "Load Reference File" to select a secondary Excel file.
+2.  Enter the column name from your main file (after transformations) to join on in "Main Key".
+3.  Enter the corresponding column name from your reference file in "Ref Key".
+4.  List the columns you want to bring over from the reference file in "Ref Columns" (comma-separated).
 
-### Using Presets
-1. Configure your columns and formulas as needed
-2. Save the configuration using "Save Config"
-3. Later, select from the preset dropdown and click "Apply Preset"
+### Using Presets & Config
+1.  Configure your column selections and formulas as needed.
+2.  Click "Save Config" to save the current setup (header row, selections, formulas) to `config.json`.
+3.  Click "Load Config" to restore a previously saved setup.
+4.  Use the "Column Presets" dropdown (populated from `presets.json`) and "Apply Preset" for quick access to predefined column/formula sets.
 
 ### Exporting Transformed Data
-1. Configure all columns and reference joins as needed
-2. Click "EXPORT DATA"
-3. Choose a location to save the output file
-4. The processed data will be exported to a new Excel file
+1.  Ensure all desired columns are selected, formulas are correct, and reference joins are configured.
+2.  Click "EXPORT DATA".
+3.  Choose a name and location to save the output `.xlsx` file.
+4.  The processed data will be exported.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to submit issues or pull requests to help improve Matrix Ingestor.
+Contributions are welcome! Please feel free to submit issues or pull requests to help improve Matrix Ingestor.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the `LICENSE` file for details. *(
