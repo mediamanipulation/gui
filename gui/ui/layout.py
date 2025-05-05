@@ -69,9 +69,11 @@ def build_layout(app):
             },
             'create_tooltip': lambda w, t: None  # No-op function
         })
+        
+    
     
     # Configure window properties
-    app.root.title("Matrix Ingestor")
+    app.root.title("Matrix Exporter")
     app.root.geometry("1100x700")  # Set default size
     app.root.minsize(900, 600)  # Set minimum size
     
@@ -85,6 +87,7 @@ def build_layout(app):
     create_status_bar(app)
     
     return app
+
 
 def create_header(app):
     """Create the app header with title."""
@@ -277,6 +280,19 @@ def create_column_controls_section(app):
     # Pack the canvas and scrollbar
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
+        # Enable mousewheel scrolling on Windows and Linux
+    def _on_mousewheel(event):
+        if event.num == 4 or event.delta > 0:
+            canvas.yview_scroll(-1, "units")
+        elif event.num == 5 or event.delta < 0:
+            canvas.yview_scroll(1, "units")
+    # Windows
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)  #
+    canvas.bind_all("<Shift-MouseWheel>", _on_mousewheel)  # macOS horizontal scroll
+    canvas.bind_all("<Button-4>", _on_mousewheel)  # Linux up
+    canvas.bind_all("<Button-5>", _on_mousewheel)  # Linux down
+    canvas.bind_all("<Button-4>", lambda e: canvas.yview_scroll(-1, "units"))  # Linux scroll up
+    canvas.bind_all("<Button-5>", lambda e: canvas.yview_scroll(1, "units"))   # Linux scroll down
     
     # Adjust the canvas window when the canvas is resized
     def on_canvas_resize(event):
