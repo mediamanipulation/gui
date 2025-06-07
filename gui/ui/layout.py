@@ -1,6 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox   # ← added messagebox
 import os
+from gui.core.config_manager import load_config
+
 
 # Import the theme and utils if they're available
 try:
@@ -485,6 +487,34 @@ def create_config_export_section(app):
             )
     
     export_button.pack(fill="x", pady=(0, FIELD_PAD))
+    
+    # Apply tooltip if available# Recent-configs dropdown
+    ttk.Label(config_container, text="Recent:").pack(side="left", padx=(0, FIELD_PAD))
+
+    app.recent_var = tk.StringVar()
+    app.recent_combo = ttk.Combobox(
+        config_container,
+        textvariable=app.recent_var,
+        state="readonly",
+        width=45,
+        values=app.recent_configs,
+    )
+    app.recent_combo.pack(side="left", padx=(0, PAD_X))
+
+
+    def load_from_recent(*_):
+        sel = app.recent_var.get()
+        if sel:
+            try:
+                cfg = load_config(sel)
+                app._apply_loaded_config(cfg)
+            except Exception as e:
+                messagebox.showerror("Error", e)
+    
+
+
+    app.recent_combo.bind("<<ComboboxSelected>>", load_from_recent)
+
     
     # Add helper text
     helper_label = ttk.Label(
