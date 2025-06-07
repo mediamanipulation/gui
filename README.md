@@ -1,4 +1,4 @@
-# 🧰 Matrix Ingestor
+# 🧰 Matrix Extractor
 
 A powerful, local-first Excel transformation toolkit with a modern UI built using Python and Tkinter.
 
